@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>郭晓彤｜实习周报</title>
+  <title>郭晓彤｜实习周报1</title>
   <style>
     :root {
       --ink: #2f3338;
@@ -623,7 +623,48 @@
       line-height: 1.75;
     }
 
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 0 74px;
+    }
+
+    .top-nav-inner {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      padding: 14px 0;
+    }
+
+    .top-nav a {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 99px;
+      transition: background .15s, color .15s;
+    }
+
+    .top-nav a:hover {
+      color: var(--ink);
+      background: var(--soft);
+    }
+
+    .top-nav a.active {
+      color: var(--deep);
+      background: var(--blue);
+    }
+
     @media (max-width: 760px) {
+      .top-nav {
+        padding: 0 22px;
+      }
+
       .page {
         padding: 40px 22px 62px;
       }
@@ -719,9 +760,15 @@
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="active">Week 1</a>
+      <a href="week2.html">Week 2</a>
+    </div>
+  </nav>
   <main class="page">
     <header class="masthead">
-      <h1>郭晓彤｜实习周报</h1>
+      <h1>郭晓彤｜实习周报1</h1>
       <div class="meta">
         <p>部门：MUX酷狗设计部-平台设计组</p>
         <p>实习时间：2026.06.08—至今</p>
