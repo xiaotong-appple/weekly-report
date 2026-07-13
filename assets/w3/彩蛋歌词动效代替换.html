@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>index-line-fall.html 动效代码</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1f2937;
+        --muted: #6b7280;
+        --line: #d8dee9;
+        --panel: #f7f9fc;
+        --code-bg: #0f172a;
+        --code-fg: #e5e7eb;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px 48px;
+        color: var(--ink);
+        background: #ffffff;
+        font-family: Arial, "Heiti SC", "Microsoft YaHei", sans-serif;
+        line-height: 1.55;
+      }
+      main { max-width: 1180px; margin: 0 auto; }
+      header {
+        padding-bottom: 18px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      h1 { margin: 0 0 10px; font-size: 30px; line-height: 1.2; }
+      h2 { margin: 34px 0 12px; font-size: 20px; }
+      p { margin: 6px 0; }
+      .meta { color: var(--muted); font-size: 14px; }
+      .summary {
+        padding: 14px 16px;
+        margin: 18px 0 22px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      pre {
+        margin: 0;
+        padding: 18px;
+        overflow: auto;
+        color: var(--code-fg);
+        background: var(--code-bg);
+        border-radius: 8px;
+        font: 12px/1.45 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        tab-size: 2;
+        white-space: pre;
+      }
+      .code-title {
+        display: inline-block;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>index-line-fall.html 动效代码</h1>
+        <p class="meta"><strong>源文件：</strong>/Users/guoxiaotong/Documents/动态尝试/lyric-animation/index-line-fall.html</p>
+        <p class="meta"><strong>导出时间：</strong>2026-07-13 13:21</p>
+        <p class="meta"><strong>说明：</strong>本文档提取该 HTML 文件中的 &lt;style&gt; 与 &lt;script&gt; 动效代码，用于查看和复用动效实现。</p>
+      </header>
+      <section class="summary">
+        <p><strong>代码概览：</strong>CSS 747 行；JavaScript 358 行。</p>
+      </section>
+      <section>
+        <h2>1. CSS 动效与样式代码（&lt;style&gt;）</h2>
+        <span class="code-title">style</span>
+        <pre><code>      :root {
+        --stage-w: 720px;
+        --stage-h: 1560px;
+        --preview-w: min(calc(100vw - 364px), calc((100vh - 36px) * 720 / 1560));
+        --preview-h: min(calc((100vw - 364px) * 1560 / 720), calc(100vh - 36px));
+        --lyric-left: 50px;
+        --lyric-top: 138px;
+        --lyric-width: 620px;
+        --lyric-font-size: 55px;
+        --lyric-font-family: &quot;LyricSourceSerif4&quot;, &quot;Source Serif 4&quot;, Georgia, serif;
+        --lyric-font-weight: 500;
+        --lyric-color: #c1d1f7;
+        --lyric-color-rgb: 193 209 247;
+        --lyric-shine-edge: rgb(193 209 247 / 0.82);
+        --lyric-shine-mid: #dce7ff;
+        --lyric-shine-soft: #d9e5ff;
+        --lyric-shine-edge-strong: rgb(193 209 247 / 0.86);
+        --lyric-shine-shadow: rgb(255 255 255 / 0.34);
+        --lyric-shine-glow: rgb(193 209 247 / 0.24);
+        --lyric-opacity: 1;
+        --lyric-line-height: 90px;
+        --drop-duration: 4400ms;
+        --fall-duration: 2850ms;
+        --effect-duration: 1480ms;
+        --float-distance: 6px;
+        --float-up-distance: -6px;
+        --float-down-distance: 3px;
+        --float-duration: 2600ms;
+        --trail-entry-long: -32px;
+        --trail-entry-short: -16px;
+        --trail-fall-long: -48px;
+        --trail-fall-mid: -28px;
+        --trail-fall-short: -12px;
+        --trail-end-long: -52px;
+        --trail-end-mid: -30px;
+        --trail-end-short: -14px;
+        --trail-entry-soft-alpha: 0.12;
+        --trail-entry-strong-alpha: 0.2;
+        --trail-fall-soft-alpha: 0.1;
+        --trail-fall-mid-alpha: 0.18;
+        --trail-fall-strong-alpha: 0.2;
+        --trail-end-soft-alpha: 0.08;
+        --trail-end-mid-alpha: 0.14;
+        --trail-end-strong-alpha: 0.17;
+        --fall-line-width: 2px;
+        --fall-ellipse-width: 92px;
+        --fall-ellipse-height: 28px;
+      }
+
+      @font-face {
+        font-family: &quot;LyricNewYork&quot;;
+        src:
+          local(&quot;New York&quot;),
+          local(&quot;NewYork&quot;),
+          url(&quot;/System/Library/Fonts/NewYork.ttf&quot;) format(&quot;truetype&quot;);
+        font-weight: 400 900;
+      }
+
+      @font-face {
+        font-family: &quot;LyricSourceSerif4&quot;;
+        src:
+          local(&quot;Source Serif 4&quot;),
+          local(&quot;SourceSerif4&quot;),
+          url(&quot;/Users/guoxiaotong/Library/Fonts/SourceSerif4-VariableFont_opsz,wght.ttf&quot;) format(&quot;truetype&quot;);
+        font-weight: 200 900;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        padding: 18px;
+        background: #07161e;
+        overflow: auto;
+      }
+
+      .stage-wrap {
+        order: 1;
+        flex: 0 0 auto;
+        width: var(--preview-w);
+        height: var(--preview-h);
+        aspect-ratio: 720 / 1560;
+      }
+
+      .control-panel {
+        order: 2;
+        flex: 0 0 286px;
+        width: 286px;
+        height: var(--preview-h);
+        padding: 16px;
+        overflow: auto;
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(13, 12, 17, 0.74);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+        backdrop-filter: blur(18px);
+        font-family: Arial, &quot;Heiti SC&quot;, &quot;SimHei&quot;, sans-serif;
+      }
+
+      .control-panel h1 {
+        margin: 0 0 12px;
+        font-size: 16px;
+        line-height: 1.2;
+      }
+
+      .control-panel label {
+        display: grid;
+        gap: 7px;
+        margin-top: 12px;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      .control-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .control-value {
+        min-width: 54px;
+        color: rgba(255, 255, 255, 0.72);
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+      }
+
+      .control-panel input,
+      .control-panel select {
+        width: 100%;
+        accent-color: #f3d27a;
+      }
+
+      .color-control {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .color-wheel {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        padding: 3px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: conic-gradient(#ff3b30, #ffcc00, #34c759, #00c7ff, #5856d6, #ff2d55, #ff3b30);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.18),
+          0 8px 18px rgba(0, 0, 0, 0.24);
+      }
+
+      .control-panel input[type=&quot;color&quot;] {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 2px solid rgba(255, 255, 255, 0.88);
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .control-panel input[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      .control-panel input[type=&quot;color&quot;]::-webkit-color-swatch {
+        border: 0;
+        border-radius: 50%;
+      }
+
+      .color-hex {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 10px;
+        color: rgba(255, 255, 255, 0.82);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 6px;
+        font-variant-numeric: tabular-nums;
+        text-transform: uppercase;
+      }
+
+      .control-panel select {
+        height: 34px;
+        padding: 0 9px;
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+      }
+
+      .panel-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .panel-actions button {
+        flex: 1;
+        height: 34px;
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .panel-actions button:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .position-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .position-actions button {
+        height: 30px;
+        color: rgba(255, 255, 255, 0.88);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .position-actions button:hover {
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .stage {
+        position: relative;
+        width: var(--stage-w);
+        height: var(--stage-h);
+        overflow: hidden;
+        transform-origin: top left;
+        background: url(&quot;./assets/新风格1底图替换2.png?v=20260708&quot;) center / cover no-repeat;
+      }
+
+      .visual-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      .flower-top {
+        z-index: 3;
+        background-image: url(&quot;./assets/新风格1替换图.png?v=20260707&quot;);
+        transform-origin: 50% 68%;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 54%, rgba(0, 0, 0, 0.9) 58%, rgba(0, 0, 0, 0.42) 63%, transparent 69%);
+        mask-image: linear-gradient(to bottom, #000 0, #000 54%, rgba(0, 0, 0, 0.9) 58%, rgba(0, 0, 0, 0.42) 63%, transparent 69%);
+        animation: flowerSway 6800ms ease-in-out infinite;
+        will-change: transform, filter;
+      }
+
+      .vase-bottom {
+        z-index: 4;
+        background-image: url(&quot;./assets/新风格1替换图.png?v=20260707&quot;);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 55%, rgba(0, 0, 0, 0.2) 59%, rgba(0, 0, 0, 0.82) 65%, #000 71%, #000 100%);
+        mask-image: linear-gradient(to bottom, transparent 0, transparent 55%, rgba(0, 0, 0, 0.2) 59%, rgba(0, 0, 0, 0.82) 65%, #000 71%, #000 100%);
+      }
+
+      .lyric-root {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        pointer-events: none;
+      }
+
+      .lyric-group {
+        position: absolute;
+        left: var(--lyric-left);
+        top: var(--lyric-top);
+        width: var(--lyric-width);
+        min-height: 180px;
+        color: var(--lyric-color);
+        font-family: var(--lyric-font-family);
+        font-size: var(--lyric-font-size);
+        font-weight: var(--lyric-font-weight);
+        line-height: var(--lyric-line-height);
+        text-align: center;
+        letter-spacing: 0;
+        pointer-events: none;
+        opacity: var(--lyric-opacity);
+        text-shadow: 0 2px 14px rgba(7, 18, 24, 0.32);
+        will-change: opacity;
+        overflow: visible;
+      }
+
+      .lyric-group .line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        height: var(--lyric-line-height);
+        white-space: nowrap;
+        overflow: visible;
+      }
+
+      .lyric-group .word {
+        position: relative;
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(-300px);
+        animation: rainSettle var(--word-drop-duration, var(--drop-duration)) linear forwards;
+        animation-delay: var(--drop-delay);
+        padding: 0.16em 0.08em 0.22em;
+        margin: -0.16em -0.08em -0.22em;
+        line-height: 1.18;
+        overflow: visible;
+        will-change: transform, filter, opacity;
+        isolation: isolate;
+      }
+
+      .char {
+        position: relative;
+        z-index: 3;
+        display: inline-block;
+        min-width: 0;
+        font-size: 1em;
+        line-height: 1.18;
+        padding: 0 0.025em 0.08em;
+        margin: 0 -0.025em -0.08em;
+        text-align: center;
+        vertical-align: baseline;
+        transform-origin: center bottom;
+        overflow: visible;
+      }
+
+      .lyric-group.effect-shine .char,
+      .lyric-group.effect-shine-wave .char,
+      .lyric-group.effect-shine-float .char,
+      .lyric-group.effect-shine-wave-float .char {
+        color: transparent;
+        background-image: linear-gradient(
+          105deg,
+          var(--lyric-shine-edge) 0%,
+          var(--lyric-shine-mid) 34%,
+          #ffffff 47%,
+          var(--lyric-shine-soft) 58%,
+          var(--lyric-shine-edge-strong) 100%
+        );
+        background-size: 260% 100%;
+        background-position: 150% 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .lyric-group.effect-shine .char,
+      .lyric-group.effect-shine-float .char {
+        animation: lyricShine var(--effect-duration) ease-in-out both;
+        animation-delay: var(--effect-delay);
+      }
+
+      .lyric-group.effect-wave .char,
+      .lyric-group.effect-wave-float .char {
+        animation: phraseWave var(--effect-duration) ease-in-out both;
+        animation-delay: var(--effect-delay);
+      }
+
+      .lyric-group.effect-shine-wave .char,
+      .lyric-group.effect-shine-wave-float .char {
+        animation:
+          lyricShine var(--effect-duration) ease-in-out both,
+          phraseWave var(--effect-duration) ease-in-out both;
+        animation-delay: var(--effect-delay), var(--effect-delay);
+      }
+
+      .lyric-group.effect-float .line,
+      .lyric-group.effect-shine-float .line,
+      .lyric-group.effect-wave-float .line,
+      .lyric-group.effect-shine-wave-float .line {
+        animation: lyricFloat var(--float-duration) ease-in-out infinite;
+        animation-delay: var(--float-delay);
+        will-change: transform;
+      }
+
+      .lyric-group.fallout .word {
+        opacity: 1;
+        transform: translateY(0);
+        animation-delay: var(--out-delay);
+      }
+
+      .lyric-group.fallout .word .char {
+        animation: glyphVanishBeforeLine var(--fall-duration) cubic-bezier(0.25, 0, 0.2, 1) both;
+        animation-delay: var(--out-delay);
+      }
+
+      .lyric-group.fallout .word::before {
+        content: &quot;&quot;;
+        position: absolute;
+        left: 50%;
+        top: calc((var(--fall-line-height) - var(--fall-ellipse-height)) * 0.5);
+        z-index: 1;
+        width: var(--fall-ellipse-width);
+        height: var(--fall-ellipse-height);
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at center,
+          rgb(var(--lyric-color-rgb) / 0.7) 0%,
+          rgb(var(--lyric-color-rgb) / 0.34) 28%,
+          rgb(var(--lyric-color-rgb) / 0.12) 58%,
+          rgb(var(--lyric-color-rgb) / 0) 100%
+        );
+        opacity: 0;
+        transform: translateX(-50%) scale(0.45);
+        transform-origin: center;
+        pointer-events: none;
+        filter: blur(0.8px);
+        animation: fallEllipseBloom 140ms ease-out both;
+        animation-delay: calc(var(--out-delay) + var(--fall-duration));
+      }
+
+      .lyric-group.fallout .word::after {
+        content: &quot;&quot;;
+        position: absolute;
+        left: 50%;
+        top: 0.02em;
+        z-index: 2;
+        width: var(--fall-line-width);
+        height: var(--fall-line-height);
+        border-radius: 999px;
+        background: var(--lyric-color);
+        opacity: 0;
+        transform: translateX(-50%) scaleY(0.02);
+        transform-origin: center top;
+        pointer-events: none;
+        box-shadow:
+          0 var(--trail-fall-long) 18px rgb(var(--lyric-color-rgb) / var(--trail-fall-soft-alpha)),
+          0 var(--trail-fall-mid) 12px rgb(var(--lyric-color-rgb) / var(--trail-fall-mid-alpha)),
+          0 var(--trail-fall-short) 7px rgb(var(--lyric-color-rgb) / var(--trail-fall-strong-alpha));
+        animation: fallingColorLine var(--fall-duration) cubic-bezier(0.58, 0, 0.92, 0.38) both;
+        animation-delay: var(--out-delay);
+      }
+
+      .lyric-group.fallout.fall-style-soft .word::after {
+        animation-timing-function: cubic-bezier(0.34, 0.02, 0.76, 0.98);
+      }
+
+      .lyric-group.fallout.fall-style-soft .word {
+        animation: rainFadeOut var(--fall-duration) cubic-bezier(0.34, 0.02, 0.76, 0.98) both;
+        animation-delay: var(--out-delay);
+      }
+
+      .lyric-group.fallout.fall-style-quick .word {
+        animation: rainQuickFadeOut var(--fall-duration) cubic-bezier(0.58, 0, 0.92, 0.38) both;
+        animation-delay: var(--out-delay);
+      }
+
+      @keyframes rainSettle {
+        0% {
+          opacity: 0;
+          transform: translateY(-300px);
+          filter: blur(5px);
+          text-shadow:
+            0 -42px 14px rgb(var(--lyric-color-rgb) / 0),
+            0 -22px 9px rgb(var(--lyric-color-rgb) / 0),
+            0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        86% {
+          opacity: 0.94;
+          transform: translateY(-34px);
+          filter: blur(0.7px);
+          text-shadow:
+            0 var(--trail-entry-long) 12px rgb(var(--lyric-color-rgb) / var(--trail-entry-soft-alpha)),
+            0 var(--trail-entry-short) 8px rgb(var(--lyric-color-rgb) / var(--trail-entry-strong-alpha)),
+            0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+          text-shadow: 0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+      }
+
+      @keyframes flowerSway {
+        0%,
+        100% {
+          transform: translateX(0) rotate(0deg);
+          filter: brightness(1);
+        }
+        25% {
+          transform: translateX(-4.4px) rotate(-0.52deg);
+          filter: brightness(1.035);
+        }
+        52% {
+          transform: translateX(3.8px) rotate(0.46deg);
+          filter: brightness(1.02);
+        }
+        78% {
+          transform: translateX(-2.3px) rotate(-0.28deg);
+          filter: brightness(1.045);
+        }
+      }
+
+      @keyframes lyricShine {
+        0% {
+          background-position: 150% 0;
+          filter: drop-shadow(0 0 0 rgb(var(--lyric-color-rgb) / 0));
+        }
+        42% {
+          filter:
+            drop-shadow(0 0 8px var(--lyric-shine-shadow))
+            drop-shadow(0 0 16px var(--lyric-shine-glow));
+        }
+        100% {
+          background-position: -150% 0;
+          filter: drop-shadow(0 0 0 rgb(var(--lyric-color-rgb) / 0));
+        }
+      }
+
+      @keyframes phraseWave {
+        0% {
+          font-size: 1em;
+          transform: translateY(0);
+        }
+        22% {
+          font-size: 1.18em;
+          transform: translateY(-2px);
+        }
+        50% {
+          font-size: 1.08em;
+          transform: translateY(1px);
+        }
+        100% {
+          font-size: 1em;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes lyricFloat {
+        0% {
+          transform: translateY(0);
+        }
+        24% {
+          transform: translateY(var(--float-up-distance));
+        }
+        54% {
+          transform: translateY(var(--float-down-distance));
+        }
+        78% {
+          transform: translateY(calc(var(--float-up-distance) * 0.42));
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes glyphVanishBeforeLine {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        10% {
+          opacity: 0.72;
+          transform: translateY(2px) scale(0.98);
+          filter: blur(0.6px);
+        }
+        18% {
+          opacity: 0;
+          transform: translateY(7px) scale(0.96);
+          filter: blur(2.6px);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(7px) scale(0.96);
+          filter: blur(4px);
+        }
+      }
+
+      @keyframes fallingColorLine {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) scaleY(0.02);
+          filter: blur(0.6px);
+        }
+        16% {
+          opacity: 0;
+          transform: translateX(-50%) scaleY(0.04);
+          filter: blur(0.6px);
+        }
+        25% {
+          opacity: 0.9;
+          transform: translateX(-50%) scaleY(0.72);
+          filter: blur(0.2px);
+        }
+        42% {
+          opacity: 0.98;
+          transform: translateX(-50%) scaleY(1);
+          filter: blur(0.1px);
+        }
+        78% {
+          opacity: 0.64;
+          transform: translateX(-50%) scaleY(1);
+          filter: blur(2.2px);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) scaleY(1);
+          filter: blur(9px);
+        }
+      }
+
+      @keyframes fallEllipseBloom {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) scale(0.42);
+          filter: blur(0.5px);
+        }
+        24% {
+          opacity: 0.9;
+          transform: translateX(-50%) scale(0.95);
+          filter: blur(0.7px);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) scale(1.55);
+          filter: blur(3.2px);
+        }
+      }
+
+      @keyframes rainFadeOut {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+          text-shadow: 0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        82% {
+          opacity: 1;
+          transform: translateY(var(--petal-y));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-fall-long) 16px rgb(var(--lyric-color-rgb) / var(--trail-fall-soft-alpha)),
+            0 var(--trail-fall-mid) 12px rgb(var(--lyric-color-rgb) / var(--trail-fall-mid-alpha)),
+            0 var(--trail-fall-short) 7px rgb(var(--lyric-color-rgb) / var(--trail-fall-strong-alpha)),
+            0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(var(--petal-end-y));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-end-long) 18px rgb(var(--lyric-color-rgb) / var(--trail-end-soft-alpha)),
+            0 var(--trail-end-mid) 12px rgb(var(--lyric-color-rgb) / var(--trail-end-mid-alpha)),
+            0 var(--trail-end-short) 8px rgb(var(--lyric-color-rgb) / var(--trail-end-strong-alpha)),
+            0 2px 14px rgba(7, 18, 24, 0.28);
+        }
+      }
+
+      @keyframes rainQuickFadeOut {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+          text-shadow: 0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        16% {
+          opacity: 1;
+          transform: translateY(calc(var(--petal-y) * 0.08));
+          filter: blur(0.2px);
+          text-shadow:
+            0 calc(var(--trail-fall-long) * 0.7) 14px rgb(var(--lyric-color-rgb) / var(--trail-fall-soft-alpha)),
+            0 calc(var(--trail-fall-short) * 0.7) 7px rgb(var(--lyric-color-rgb) / var(--trail-fall-strong-alpha)),
+            0 2px 14px rgba(7, 18, 24, 0.32);
+        }
+        48% {
+          opacity: 1;
+          transform: translateY(calc(var(--petal-y) * 0.94));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-fall-long) 18px rgb(var(--lyric-color-rgb) / var(--trail-fall-soft-alpha)),
+            0 var(--trail-fall-mid) 13px rgb(var(--lyric-color-rgb) / var(--trail-fall-mid-alpha)),
+            0 var(--trail-fall-short) 8px rgb(var(--lyric-color-rgb) / var(--trail-fall-strong-alpha)),
+            0 2px 14px rgba(7, 18, 24, 0.3);
+        }
+        58% {
+          opacity: 1;
+          transform: translateY(var(--petal-y));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-end-long) 22px rgb(var(--lyric-color-rgb) / var(--trail-end-soft-alpha)),
+            0 var(--trail-end-mid) 15px rgb(var(--lyric-color-rgb) / var(--trail-end-mid-alpha)),
+            0 var(--trail-end-short) 9px rgb(var(--lyric-color-rgb) / var(--trail-end-strong-alpha));
+        }
+        72% {
+          opacity: 1;
+          transform: translateY(calc(var(--petal-y) + 16px));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-end-long) 22px rgb(var(--lyric-color-rgb) / var(--trail-end-soft-alpha)),
+            0 var(--trail-end-mid) 15px rgb(var(--lyric-color-rgb) / var(--trail-end-mid-alpha)),
+            0 var(--trail-end-short) 9px rgb(var(--lyric-color-rgb) / var(--trail-end-strong-alpha));
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(var(--petal-end-y));
+          filter: blur(0);
+          text-shadow:
+            0 var(--trail-end-long) 24px rgb(var(--lyric-color-rgb) / var(--trail-end-soft-alpha)),
+            0 var(--trail-end-mid) 16px rgb(var(--lyric-color-rgb) / var(--trail-end-mid-alpha)),
+            0 var(--trail-end-short) 10px rgb(var(--lyric-color-rgb) / var(--trail-end-strong-alpha));
+        }
+      }
+
+      @media (max-width: 1080px) {
+        body {
+          flex-direction: column;
+          justify-content: flex-start;
+        }
+
+        .stage-wrap {
+          width: min(calc(100vw - 24px), calc((100vh - 260px) * 720 / 1560));
+        }
+
+        .control-panel {
+          flex-basis: auto;
+          width: auto;
+          max-width: min(720px, calc(100vw - 24px));
+          height: auto;
+          max-height: none;
+          padding: 12px;
+        }
+
+        .control-panel h1 {
+          margin-bottom: 4px;
+        }
+      }
+    </code></pre>
+      </section>
+      <section>
+        <h2>2. JavaScript 动效逻辑代码（&lt;script&gt;）</h2>
+        <span class="code-title">script</span>
+        <pre><code>      const lyrics = [
+        [[&quot;Every&quot;, &quot;drop&quot;, &quot;that&quot;, &quot;falls&quot;], [&quot;reminds&quot;, &quot;me&quot;, &quot;of&quot;, &quot;you.&quot;]],
+        [[&quot;the&quot;, &quot;night&quot;, &quot;is&quot;, &quot;cold&quot;], [&quot;in&quot;, &quot;the&quot;, &quot;kingdom.&quot;]],
+        [[&quot;I&quot;, &quot;can&quot;, &quot;feel&quot;, &quot;you&quot;], [&quot;fade&quot;, &quot;away&quot;]],
+        [[&quot;You&quot;, &quot;steps&quot;, &quot;keep&quot;], [&quot;me&quot;, &quot;awake&quot;]],
+      ];
+
+      const lyricRoot = document.querySelector(&quot;.lyric-root&quot;);
+      const stage = document.querySelector(&quot;.stage&quot;);
+      const wrap = document.querySelector(&quot;.stage-wrap&quot;);
+      const controls = document.querySelectorAll(&quot;[data-control]&quot;);
+      const valueLabels = document.querySelectorAll(&quot;[data-value-for]&quot;);
+      const colorPreview = document.querySelector(&quot;[data-color-preview]&quot;);
+      const storageKey = &quot;lyricControlsLineFall&quot;;
+      const fontStacks = {
+        sourceSerif4: &#x27;&quot;LyricSourceSerif4&quot;, &quot;Source Serif 4&quot;, Georgia, serif&#x27;,
+        newYork: &#x27;&quot;LyricNewYork&quot;, &quot;New York&quot;, &quot;NewYork&quot;, Georgia, serif&#x27;,
+        arialBlack: &#x27;&quot;Arial Black&quot;, Arial, sans-serif&#x27;,
+        heiti: &#x27;&quot;Heiti SC&quot;, &quot;SimHei&quot;, sans-serif&#x27;,
+        georgia: &#x27;Georgia, &quot;Times New Roman&quot;, serif&#x27;,
+      };
+      const fontWeights = {
+        sourceSerif4: 500,
+        newYork: 700,
+        arialBlack: 900,
+        heiti: 900,
+        georgia: 700,
+      };
+      const defaultEntryTimeline = {
+        total: 4400,
+        secondLineDelay: 1040,
+        wordStagger: 145,
+        wordDuration: 2680,
+      };
+      const defaultSettings = {
+        fontSize: 55,
+        left: 50,
+        top: 138,
+        width: 620,
+        lineHeight: 90,
+        fontChoice: &quot;sourceSerif4&quot;,
+        fontColor: &quot;#c1d1f7&quot;,
+        fontOpacity: 1,
+        fontVersion: 2,
+        entryTimingMode: &quot;total&quot;,
+        dropDuration: defaultEntryTimeline.total,
+        holdDuration: 2320,
+        fallDuration: 2850,
+        fallStyle: &quot;quick&quot;,
+        groupFallGap: 340,
+        lineFallGap: 620,
+        groupFallSpread: 160,
+        trailLength: 1,
+        trailOpacity: 1,
+        fallTargetY: 352,
+        effectDuration: 1480,
+        floatDistance: 6,
+        floatDuration: 2600,
+        floatVersion: 3,
+        effect: &quot;shine-float&quot;,
+      };
+      const savedSettings = loadSettings();
+      if (savedSettings.entryTimingMode !== &quot;total&quot; &amp;&amp; savedSettings.dropDuration != null) {
+        savedSettings.dropDuration = 1040 + 4 * 145 + Number(savedSettings.dropDuration) + 100;
+        savedSettings.entryTimingMode = &quot;total&quot;;
+      }
+      if (savedSettings.fontVersion !== 2) {
+        savedSettings.fontChoice = &quot;sourceSerif4&quot;;
+        savedSettings.fontVersion = 2;
+      }
+      if (savedSettings.floatVersion !== 3) {
+        savedSettings.floatDistance = 6;
+        savedSettings.floatDuration = 2600;
+        if (!savedSettings.effect || savedSettings.effect === &quot;shine&quot;) {
+          savedSettings.effect = &quot;shine-float&quot;;
+        }
+        savedSettings.floatVersion = 3;
+      }
+      let settings = { ...defaultSettings, ...savedSettings };
+      settings.fontChoice = fontStacks[settings.fontChoice] ? settings.fontChoice : defaultSettings.fontChoice;
+      settings.fontColor = normalizeHexColor(settings.fontColor, defaultSettings.fontColor);
+      settings.effect = [&quot;shine&quot;, &quot;wave&quot;, &quot;shine-wave&quot;, &quot;float&quot;, &quot;shine-float&quot;, &quot;wave-float&quot;, &quot;shine-wave-float&quot;, &quot;none&quot;].includes(settings.effect)
+        ? settings.effect
+        : defaultSettings.effect;
+      settings.fallStyle = [&quot;quick&quot;, &quot;soft&quot;].includes(settings.fallStyle) ? settings.fallStyle : defaultSettings.fallStyle;
+      settings.dropDuration = Math.max(300, Math.min(12000, settings.dropDuration));
+      settings.fallDuration = Math.max(200, Math.min(6000, settings.fallDuration));
+      settings.groupFallGap = Math.max(0, Math.min(1500, settings.groupFallGap ?? defaultSettings.groupFallGap));
+      settings.lineFallGap = Math.max(0, Math.min(2000, settings.lineFallGap ?? defaultSettings.lineFallGap));
+      settings.groupFallSpread = Math.max(0, Math.min(320, settings.groupFallSpread ?? defaultSettings.groupFallSpread));
+      let index = 0;
+      let timerIds = [];
+      let restartRequest = 0;
+
+      function loadSettings() {
+        try {
+          return JSON.parse(window.localStorage.getItem(storageKey) || window.localStorage.getItem(&quot;lyricControls&quot;) || &quot;{}&quot;);
+        } catch {
+          return {};
+        }
+      }
+
+      function saveSettings() {
+        window.localStorage.setItem(storageKey, JSON.stringify(settings));
+      }
+
+      function resizeStage() {
+        const width = wrap.getBoundingClientRect().width;
+        stage.style.transform = `scale(${width / 720})`;
+      }
+
+      function formatValue(key, value) {
+        if (key === &quot;effect&quot; || key === &quot;fontChoice&quot; || key === &quot;fallStyle&quot;) {
+          return &quot;&quot;;
+        }
+        if (key === &quot;fontColor&quot;) {
+          return normalizeHexColor(value, defaultSettings.fontColor).toUpperCase();
+        }
+        if (key.includes(&quot;Duration&quot;)) {
+          return `${(value / 1000).toFixed(1)}s`;
+        }
+        if (key === &quot;groupFallGap&quot;) {
+          return `${value}ms`;
+        }
+        if (key === &quot;lineFallGap&quot;) {
+          return `${value}ms`;
+        }
+        if (key === &quot;groupFallSpread&quot;) {
+          return `${value}px`;
+        }
+        if (key === &quot;floatDistance&quot;) {
+          return `${value}px`;
+        }
+        if (key === &quot;trailLength&quot;) {
+          return `${Number(value).toFixed(1)}x`;
+        }
+        if (key === &quot;trailOpacity&quot;) {
+          return `${Math.round(Number(value) * 100)}%`;
+        }
+        if (key === &quot;fontOpacity&quot;) {
+          return `${Math.round(Number(value) * 100)}%`;
+        }
+        return `${value}px`;
+      }
+
+      function clampAlpha(value) {
+        return Math.max(0, Math.min(1, value)).toFixed(3);
+      }
+
+      function normalizeHexColor(value, fallback) {
+        return /^#[0-9a-f]{6}$/i.test(value || &quot;&quot;) ? value.toLowerCase() : fallback;
+      }
+
+      function hexToRgb(hex) {
+        const normalized = normalizeHexColor(hex, defaultSettings.fontColor).slice(1);
+        return {
+          r: parseInt(normalized.slice(0, 2), 16),
+          g: parseInt(normalized.slice(2, 4), 16),
+          b: parseInt(normalized.slice(4, 6), 16),
+        };
+      }
+
+      function rgbToHex({ r, g, b }) {
+        return `#${[r, g, b].map((channel) =&gt; channel.toString(16).padStart(2, &quot;0&quot;)).join(&quot;&quot;)}`;
+      }
+
+      function mixWithWhite(hex, amount) {
+        const rgb = hexToRgb(hex);
+        return rgbToHex({
+          r: Math.round(rgb.r + (255 - rgb.r) * amount),
+          g: Math.round(rgb.g + (255 - rgb.g) * amount),
+          b: Math.round(rgb.b + (255 - rgb.b) * amount),
+        });
+      }
+
+      function applySettings() {
+        const root = document.documentElement.style;
+        const fontRgb = hexToRgb(settings.fontColor);
+        root.setProperty(&quot;--lyric-left&quot;, `${settings.left}px`);
+        root.setProperty(&quot;--lyric-top&quot;, `${settings.top}px`);
+        root.setProperty(&quot;--lyric-width&quot;, `${settings.width}px`);
+        root.setProperty(&quot;--lyric-font-size&quot;, `${settings.fontSize}px`);
+        root.setProperty(&quot;--lyric-font-family&quot;, fontStacks[settings.fontChoice]);
+        root.setProperty(&quot;--lyric-font-weight&quot;, fontWeights[settings.fontChoice]);
+        root.setProperty(&quot;--lyric-color&quot;, settings.fontColor);
+        root.setProperty(&quot;--lyric-color-rgb&quot;, `${fontRgb.r} ${fontRgb.g} ${fontRgb.b}`);
+        root.setProperty(&quot;--lyric-shine-edge&quot;, `rgb(${fontRgb.r} ${fontRgb.g} ${fontRgb.b} / 0.82)`);
+        root.setProperty(&quot;--lyric-shine-mid&quot;, mixWithWhite(settings.fontColor, 0.68));
+        root.setProperty(&quot;--lyric-shine-soft&quot;, mixWithWhite(settings.fontColor, 0.58));
+        root.setProperty(&quot;--lyric-shine-edge-strong&quot;, `rgb(${fontRgb.r} ${fontRgb.g} ${fontRgb.b} / 0.86)`);
+        root.setProperty(&quot;--lyric-shine-glow&quot;, `rgb(${fontRgb.r} ${fontRgb.g} ${fontRgb.b} / 0.24)`);
+        root.setProperty(&quot;--lyric-opacity&quot;, settings.fontOpacity);
+        root.setProperty(&quot;--lyric-line-height&quot;, `${settings.lineHeight}px`);
+        root.setProperty(&quot;--drop-duration&quot;, `${settings.dropDuration}ms`);
+        root.setProperty(&quot;--fall-duration&quot;, `${settings.fallDuration}ms`);
+        root.setProperty(&quot;--effect-duration&quot;, `${settings.effectDuration}ms`);
+        root.setProperty(&quot;--float-distance&quot;, `${settings.floatDistance}px`);
+        root.setProperty(&quot;--float-up-distance&quot;, `${-settings.floatDistance}px`);
+        root.setProperty(&quot;--float-down-distance&quot;, `${Math.round(settings.floatDistance * 0.42)}px`);
+        root.setProperty(&quot;--float-duration&quot;, `${settings.floatDuration}ms`);
+        root.setProperty(&quot;--trail-entry-long&quot;, `${-32 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-entry-short&quot;, `${-16 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-fall-long&quot;, `${-48 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-fall-mid&quot;, `${-28 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-fall-short&quot;, `${-12 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-end-long&quot;, `${-52 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-end-mid&quot;, `${-30 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-end-short&quot;, `${-14 * settings.trailLength}px`);
+        root.setProperty(&quot;--trail-entry-soft-alpha&quot;, clampAlpha(0.12 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-entry-strong-alpha&quot;, clampAlpha(0.2 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-fall-soft-alpha&quot;, clampAlpha(0.1 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-fall-mid-alpha&quot;, clampAlpha(0.18 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-fall-strong-alpha&quot;, clampAlpha(0.2 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-end-soft-alpha&quot;, clampAlpha(0.08 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-end-mid-alpha&quot;, clampAlpha(0.14 * settings.trailOpacity));
+        root.setProperty(&quot;--trail-end-strong-alpha&quot;, clampAlpha(0.17 * settings.trailOpacity));
+
+        controls.forEach((control) =&gt; {
+          const key = control.dataset.control;
+          control.value = settings[key];
+        });
+        valueLabels.forEach((label) =&gt; {
+          const key = label.dataset.valueFor;
+          label.textContent = formatValue(key, settings[key]);
+        });
+        colorPreview.textContent = settings.fontColor.toUpperCase();
+        colorPreview.style.background = `linear-gradient(90deg, ${settings.fontColor}, ${mixWithWhite(settings.fontColor, 0.68)})`;
+      }
+
+      function clearTimers() {
+        timerIds.forEach((id) =&gt; window.clearTimeout(id));
+        timerIds = [];
+      }
+
+      function restartAnimation() {
+        window.clearTimeout(restartRequest);
+        clearTimers();
+        lyricRoot.innerHTML = &quot;&quot;;
+        index = 0;
+        playCycle();
+      }
+
+      function queueRestart() {
+        window.clearTimeout(restartRequest);
+        restartRequest = window.setTimeout(restartAnimation, 220);
+      }
+
+      function renderLyric(group, lines) {
+        let wordIndex = 0;
+        let charIndex = 0;
+        const entryScale = settings.dropDuration / defaultEntryTimeline.total;
+        const secondLineDelay = defaultEntryTimeline.secondLineDelay * entryScale;
+        const wordStagger = defaultEntryTimeline.wordStagger * entryScale;
+        const wordDropDuration = Math.max(120, defaultEntryTimeline.wordDuration * entryScale);
+        group.innerHTML = lines
+          .map((line, lineIndex) =&gt; {
+            const words = line
+              .map((word, wordInLine) =&gt; {
+                const lineEntryDelay = lineIndex === 0 ? 0 : secondLineDelay;
+                const delay = lineEntryDelay + wordInLine * wordStagger;
+                const lineExitDelay = lineIndex === 1 ? 0 : settings.lineFallGap;
+                const groupBreak = line.length &lt;= 3 ? line.length : 2;
+                const groupIndex = wordInLine &lt; groupBreak ? 0 : 1;
+                const groupStart = groupIndex === 0 ? 0 : groupBreak;
+                const outDelay = lineExitDelay + groupIndex * settings.groupFallGap + (wordInLine - groupStart) * 36;
+                const lineBaseY = settings.top + lineIndex * settings.lineHeight;
+                const groupDistanceMap = lineIndex === 0 ? [0.2, 0.85] : [1.1, 0.55];
+                const distanceOffset = groupDistanceMap[groupIndex] ?? groupDistanceMap[0];
+                const redEntryY = settings.fallTargetY + distanceOffset * settings.groupFallSpread;
+                const petalY = redEntryY - lineBaseY;
+                const petalEndY = petalY + 46 + (wordInLine % 2) * 18;
+                const fallLineHeight = 100 + Math.round(Math.random() * 200);
+                const letters = [...word]
+                  .map((char) =&gt; {
+                    const effectDelay = charIndex * 20 + lineIndex * 110;
+                    charIndex += 1;
+                    return `&lt;span class=&quot;char&quot; style=&quot;--effect-delay:${effectDelay}ms&quot;&gt;${char}&lt;/span&gt;`;
+                  })
+                  .join(&quot;&quot;);
+                wordIndex += 1;
+                return `&lt;span class=&quot;word&quot; style=&quot;--drop-delay:${delay}ms;--word-drop-duration:${wordDropDuration}ms;--out-delay:${outDelay}ms;--petal-y:${petalY}px;--petal-end-y:${petalEndY}px;--fall-line-height:${fallLineHeight}px&quot;&gt;${letters}&lt;/span&gt;`;
+              })
+              .join(&quot;&quot;);
+            const floatDelay = lineIndex === 0 ? &quot;0ms&quot; : &quot;360ms&quot;;
+            return `&lt;div class=&quot;line&quot; style=&quot;--float-delay:${floatDelay}&quot;&gt;${words}&lt;/div&gt;`;
+          })
+          .join(&quot;&quot;);
+      }
+
+      function playCycle() {
+        const current = lyrics[index];
+        const group = document.createElement(&quot;div&quot;);
+        group.className = &quot;lyric-group&quot;;
+        lyricRoot.appendChild(group);
+        renderLyric(group, current);
+
+        const longestLine = Math.max(...current.map((line) =&gt; line.length));
+        const dropDone = settings.dropDuration + 100;
+        const falloutStart = dropDone + settings.holdDuration;
+        const nextStart = falloutStart + 520;
+        const cleanup = falloutStart + settings.fallDuration + settings.lineFallGap + settings.groupFallGap + longestLine * 135 + 1400;
+
+        timerIds.push(window.setTimeout(() =&gt; {
+          if (settings.effect !== &quot;none&quot;) {
+            group.classList.add(`effect-${settings.effect}`);
+          }
+        }, dropDone));
+
+        timerIds.push(window.setTimeout(() =&gt; {
+          group.classList.remove(&quot;effect-shine&quot;, &quot;effect-wave&quot;, &quot;effect-shine-wave&quot;, &quot;effect-float&quot;, &quot;effect-shine-float&quot;, &quot;effect-wave-float&quot;, &quot;effect-shine-wave-float&quot;);
+          group.classList.add(&quot;fallout&quot;, `fall-style-${settings.fallStyle}`);
+        }, falloutStart));
+
+        index = (index + 1) % lyrics.length;
+        timerIds.push(window.setTimeout(playCycle, nextStart));
+        const cleanupId = window.setTimeout(() =&gt; {
+          group.remove();
+          timerIds = timerIds.filter((id) =&gt; id !== cleanupId);
+        }, cleanup);
+        timerIds.push(cleanupId);
+      }
+
+      controls.forEach((control) =&gt; {
+        control.addEventListener(&quot;input&quot;, () =&gt; {
+          const key = control.dataset.control;
+          settings[key] = control.type === &quot;range&quot; ? Number(control.value) : control.value;
+          applySettings();
+          saveSettings();
+          if ([&quot;top&quot;, &quot;lineHeight&quot;, &quot;dropDuration&quot;, &quot;holdDuration&quot;, &quot;fallDuration&quot;, &quot;fallStyle&quot;, &quot;groupFallGap&quot;, &quot;lineFallGap&quot;, &quot;groupFallSpread&quot;, &quot;fallTargetY&quot;, &quot;effectDuration&quot;, &quot;effect&quot;].includes(key)) {
+            queueRestart();
+          }
+        });
+      });
+
+      document.querySelectorAll(&quot;[data-fall-shift]&quot;).forEach((button) =&gt; {
+        button.addEventListener(&quot;click&quot;, () =&gt; {
+          const control = document.querySelector(&#x27;[data-control=&quot;fallTargetY&quot;]&#x27;);
+          const nextValue = settings.fallTargetY + Number(button.dataset.fallShift);
+          settings.fallTargetY = Math.max(Number(control.min), Math.min(Number(control.max), nextValue));
+          applySettings();
+          saveSettings();
+          restartAnimation();
+        });
+      });
+
+      document.querySelector(&#x27;[data-action=&quot;restart&quot;]&#x27;).addEventListener(&quot;click&quot;, restartAnimation);
+      document.querySelector(&#x27;[data-action=&quot;reset&quot;]&#x27;).addEventListener(&quot;click&quot;, () =&gt; {
+        settings = { ...defaultSettings };
+        applySettings();
+        saveSettings();
+        restartAnimation();
+      });
+
+      window.addEventListener(&quot;resize&quot;, resizeStage);
+      applySettings();
+      resizeStage();
+      playCycle();
+    </code></pre>
+      </section>
+    </main>
+  </body>
+</html>

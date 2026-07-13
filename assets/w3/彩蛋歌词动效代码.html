@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>彩蛋歌词动效代码</title>
+  <style>
+    body { margin: 0; padding: 40px; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; background: #f7f7f7; color: #222; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 18px; padding: 32px; box-shadow: 0 18px 40px rgba(0,0,0,.08); }
+    h1 { margin: 0 0 24px; font-size: 28px; line-height: 1.1; }
+    pre { background: #f3f4f6; padding: 24px; border-radius: 14px; overflow-x: auto; line-height: 1.6; font-size: 14px; }
+    a { display: inline-block; margin-bottom: 18px; color: #1a73e8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../../week3.html">← 返回 Week 3</a>
+    <h1>彩蛋歌词动效代码</h1>
+    <pre><code>// 这里放置彩蛋歌词动效的代码说明或片段
+// 示例：
+function renderEasterLyrics(text, type) {
+  return `<div class="easter-lyrics ${type}">${text}</div>`;
+}
+
+const lyrics = ['隐藏歌词 A', '隐藏歌词 B', '隐藏歌词 C'];
+
+lyrics.forEach((line) => {
+  document.body.insertAdjacentHTML('beforeend', renderEasterLyrics(line, 'special'));
+});
+</code></pre>
+  </div>
+</body>
+</html>

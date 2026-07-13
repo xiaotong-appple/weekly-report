@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doc Viewer</title>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; background: #f7f7f7; }
+    .container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .toolbar { padding: 16px; background: #ffffff; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 12px; }
+    .toolbar a { color: #1a73e8; text-decoration: none; font-weight: 700; }
+    .iframe-wrap { flex: 1; min-height: 0; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .message { padding: 24px; text-align: center; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <a href="week3.html">返回 Week 3</a>
+      <span id="fileName"></span>
+    </div>
+    <div class="iframe-wrap" id="viewer">
+      <div class="message">正在加载文档...</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get('file');
+    const viewer = document.getElementById('viewer');
+    const fileName = document.getElementById('fileName');
+
+    if (!file) {
+      viewer.innerHTML = '<div class="message">未找到要查看的文件。</div>';
+    } else {
+      fileName.textContent = file.split('/').pop();
+      if (window.location.protocol === 'file:') {
+        viewer.innerHTML = '<div class="message">当前页面通过本地文件方式打开，Office 在线查看器无法读取本地文件。请将该站点部署到 HTTP 静态服务器，或直接打开文档：<br><a href="' + file + '" target="_blank" rel="noopener">打开文件</a></div>';
+      } else {
+        const encoded = encodeURIComponent(window.location.origin + '/' + file);
+        const url = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encoded;
+        viewer.innerHTML = '<iframe src="' + url + '" allowfullscreen></iframe>';
+      }
+    }
+  </script>
+</body>
+</html>
