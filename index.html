@@ -465,6 +465,17 @@
       <a href="week4.html">Week 4</a>
     </div>
   </nav>
+  <script>
+    (function() {
+      var navLinks = document.querySelectorAll('.top-nav-inner a[href^="week"]');
+      if (!navLinks.length) return;
+      var latestLink = navLinks[navLinks.length - 1];
+      var currentFile = window.location.pathname.split('/').pop();
+      if (!currentFile || currentFile === '' || currentFile === 'index.html') {
+        window.location.replace(latestLink.href);
+      }
+    })();
+  </script>
   <main class="page">
     <header class="masthead">
       <h1>郭晓彤｜实习周报3</h1>

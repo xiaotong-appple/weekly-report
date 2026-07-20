@@ -48,7 +48,7 @@ function contentType(filePath) {
 
 const server = http.createServer((req, res) => {
   let requestPath = req.url.split('?')[0];
-  if (requestPath === '/') {
+  if (requestPath === '/' || requestPath === '/index.html') {
     const latestWeek = getLatestWeekPage();
     if (latestWeek) {
       res.writeHead(302, { Location: `/${latestWeek.file}` });
