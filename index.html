@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>郭晓彤｜实习周报3</title>
   <style>
+    html { visibility: hidden; }
     :root {
       --ink: #2f3338;
       --muted: #6c737c;
@@ -468,11 +469,16 @@
   <script>
     (function() {
       var navLinks = document.querySelectorAll('.top-nav-inner a[href^="week"]');
-      if (!navLinks.length) return;
+      if (!navLinks.length) {
+        document.documentElement.style.visibility = 'visible';
+        return;
+      }
       var latestLink = navLinks[navLinks.length - 1];
       var currentFile = window.location.pathname.split('/').pop();
       if (!currentFile || currentFile === '' || currentFile === 'index.html') {
         window.location.replace(latestLink.href);
+      } else {
+        document.documentElement.style.visibility = 'visible';
       }
     })();
   </script>
@@ -572,16 +578,5 @@
       </div>
     </section>
   </main>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var navLinks = document.querySelectorAll('.top-nav-inner a[href^="week"]');
-      if (!navLinks.length) return;
-      var latestLink = navLinks[navLinks.length - 1];
-      var currentFile = window.location.pathname.split('/').pop();
-      if (!currentFile || currentFile === 'index.html') {
-        window.location.href = latestLink.href;
-      }
-    });
-  </script>
 </body>
 </html>
