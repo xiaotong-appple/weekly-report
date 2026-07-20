@@ -561,5 +561,16 @@
       </div>
     </section>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var navLinks = document.querySelectorAll('.top-nav-inner a[href^="week"]');
+      if (!navLinks.length) return;
+      var latestLink = navLinks[navLinks.length - 1];
+      var currentFile = window.location.pathname.split('/').pop();
+      if (!currentFile || currentFile === 'index.html') {
+        window.location.href = latestLink.href;
+      }
+    });
+  </script>
 </body>
 </html>

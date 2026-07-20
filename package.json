@@ -1,0 +1,10 @@
+{
+  "name": "weekly-report",
+  "version": "1.0.0",
+  "description": "Weekly report pages with dynamic index navigation.",
+  "private": true,
+  "scripts": {
+    "sync-week-nav": "node sync-week-nav.js",
+    "serve-week": "node serve-week.js"
+  }
+}
